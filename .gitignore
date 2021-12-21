@@ -1,0 +1,5 @@
+*.dict
+*.bam
+*.txt
+*.chain
+.idea/*
