@@ -2,4 +2,6 @@
 *.bam
 *.txt
 *.chain
+.idea/inspectionProfiles/*
 .idea/*
+__pycache__
