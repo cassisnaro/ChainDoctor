@@ -12,7 +12,7 @@ def check_against_source_dict(chain_path: str, dict_path: str, translation_path:
 
 def check_against_destination_dict(chain_path: str, dict_path: str, translation_path: str = None) -> None:
     _, chain_destination_dict = extract_reference_description(chain_path)
-    check_chain_against_dict(chain_destination_dict, dict_path, translation_path)
+    check_missing_sequences_in_dict(chain_destination_dict, dict_path, translation_path)
 
 
 def check_chain_against_dict(chain_dict: Dict[str, int], dict_path: str, translation_source_path: str = None) -> None:
@@ -30,6 +30,33 @@ def check_chain_against_dict(chain_dict: Dict[str, int], dict_path: str, transla
         elif chain_dict[entry.SN] != entry.LN:
             print("Mismatching length data for: ", entry.SN, "length in chain is", chain_dict[entry.SN], "vs dict:",
                   entry.LN)
+
+
+def fasta_list_to_dict(fasta_list: List[FastaDictSeqEntry]) -> Dict[str, int]:
+    result: Dict[str, int] = {}
+
+    for fasta_entry in fasta_list:
+        result[fasta_entry.SN] = fasta_entry.LN
+
+    return result
+
+
+def check_missing_sequences_in_dict(chain_dict: Dict[str, int], dict_path: str, translation_source_path: str = None) -> None:
+    translation_source_dict: Dict[str, str] = {}
+    if translation_source_path is not None:
+        translation_source_dict = load_translation_scheme(translation_source_path)
+
+    chain_dict = translate_dict(chain_dict, translation_source_dict)
+
+    fasta_list: List[FastaDictSeqEntry] = parse_fasta_dict(dict_path)
+    fasta_dict: Dict[str, int] = fasta_list_to_dict(fasta_list)
+
+    for seq_chain, seq_length in chain_dict.items():
+        if seq_chain not in fasta_dict:
+            print("Chain output sequence ", seq_chain," is missing in fasta dict")
+        elif seq_length != fasta_dict[seq_chain]:
+            print("Mismatching length data for: ", seq_chain, "length in chain is", seq_length, "vs dict:",
+                  fasta_dict[seq_chain])
 
 
 def check_chain_source_bam(chain_path: str, bam_path: str, translation_source_path: str = None) -> None:
