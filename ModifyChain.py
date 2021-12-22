@@ -1,6 +1,7 @@
-from typing import Dict, List
+from typing import Dict, List, Set
 
-from utils import translate_chain, truncate
+from ChainFile import ChainFile
+
 
 def load_translation_scheme(translation_scheme_path: str) -> Dict[str, str]:
     result: Dict[str, str] = {}
@@ -20,11 +21,29 @@ def translate_chain_file(
 ):
     translation_source_dict = load_translation_scheme(translation_source_path)
     translation_destination_dict = load_translation_scheme(translation_destination_path)
-    translate_chain(chain_input_path, chain_output_path, translation_source_dict, translation_destination_dict)
 
-def truncate_main(chain_path: str, destination_path: str, sequences_to_erase_path: str):
-    sequences_to_erase: List[str] = []
-    with open(sequences_to_erase_path) as sequences_to_erase_file:
-        for sequence_to_erase in sequences_to_erase_file:
-            sequences_to_erase.append(sequence_to_erase.strip())
-    truncate(chain_path, destination_path, sequences_to_erase)
+    chainFile = ChainFile(chain_input_path)
+    chainFile.translate(translate_source_dict=translation_source_dict, translate_destination_dict=translation_destination_dict)
+    chainFile.write(chain_output_path)
+
+def truncate_main(
+        chain_path: str,
+        destination_path: str,
+        source_sequences_to_erase_path: str,
+        destination_sequences_to_erase_path: str):
+
+    source_sequences_to_erase: Set[str] = set()
+    if source_sequences_to_erase is not None:
+        with open(source_sequences_to_erase_path) as sequences_to_erase_file:
+            for sequence_to_erase in sequences_to_erase_file:
+                source_sequences_to_erase.add(sequence_to_erase.strip())
+
+    destination_sequences_to_erase: Set[str] = set()
+    if destination_sequences_to_erase_path is not None:
+        with open(destination_sequences_to_erase_path) as sequences_to_erase_file:
+            for sequence_to_erase in sequences_to_erase_file:
+                destination_sequences_to_erase.add(sequence_to_erase.strip())
+
+    chainFile = ChainFile(chain_path)
+    chainFile.truncate(truncate_source=source_sequences_to_erase, truncate_destination=destination_sequences_to_erase)
+    chainFile.write(destination_path)

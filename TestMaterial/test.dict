@@ -1,0 +1,4 @@
+@HD	VN:1.0	SO:unsorted
+@SQ	SN:chr1	LN:249250621	UR:file:/humgen/1kg/reference/human_g1k_v37_decoy.fasta	M5:1b22b98cdeb4a9304cb5d48026a85128
+@SQ	SN:chrY	LN:59373566	UR:file:/humgen/1kg/reference/human_g1k_v37_decoy.fasta	M5:1fa3474750af0948bdf97d5a0ee52e51
+@SQ	SN:chr2	LN:59373566	UR:file:/humgen/1kg/reference/human_g1k_v37_decoy.fasta	M5:1fa3474750af0948bdf97d5a0ee52e51

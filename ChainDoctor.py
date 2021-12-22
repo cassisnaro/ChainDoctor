@@ -56,14 +56,16 @@ The commands are:
             description='Translate sequences names')
         parser.add_argument('-c', '--chain', required=True)
         parser.add_argument('-o', '--output', required=True)
-        parser.add_argument('-t', '--truncate', required=True)
+        parser.add_argument('-s', '--truncateSource', required=False)
+        parser.add_argument('-d', '--truncateDestination', required=False)
 
         args = vars(parser.parse_args(sys.argv[2:]))
 
         truncate_main(
             chain_path=args['chain'],
             destination_path=args['output'],
-            sequences_to_erase_path=args['truncate']
+            source_sequences_to_erase_path=args['truncateSource'],
+            destination_sequences_to_erase_path=args['truncateDestination']
         )
 
     @staticmethod
@@ -76,11 +78,11 @@ The commands are:
 
         args = vars(parser.parse_args(sys.argv[2:]))
 
-        check_against_destination_dict(
+        print(check_against_destination_dict(
             chain_path=args['chain'],
             dict_path=args['dict'],
             translation_path=args['translate']
-        )
+        ))
 
     @staticmethod
     def check_source_against_dict():
@@ -92,11 +94,11 @@ The commands are:
 
         args = vars(parser.parse_args(sys.argv[2:]))
 
-        check_against_source_dict(
+        print(check_against_source_dict(
             chain_path=args['chain'],
             dict_path=args['dict'],
             translation_path=args['translate']
-        )
+        ))
 
     @staticmethod
     def check_source_against_bam():
@@ -108,11 +110,11 @@ The commands are:
 
         args = vars(parser.parse_args(sys.argv[2:]))
 
-        check_chain_source_bam(
+        print(check_chain_source_bam(
             chain_path=args['chain'],
             bam_path=args['bam'],
             translation_source_path=args['translate']
-        )
+        ))
 
 
 if __name__ == '__main__':
